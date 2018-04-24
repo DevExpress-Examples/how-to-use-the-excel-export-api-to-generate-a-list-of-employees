@@ -35,7 +35,7 @@
             ' 
             ' btnExportToXLSX
             ' 
-            Me.btnExportToXLSX.Image = (DirectCast(resources.GetObject("btnExportToXLSX.Image"), System.Drawing.Image))
+            Me.btnExportToXLSX.Image = (CType(resources.GetObject("btnExportToXLSX.Image"), System.Drawing.Image))
             Me.btnExportToXLSX.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
             Me.btnExportToXLSX.Location = New System.Drawing.Point(11, 80)
             Me.btnExportToXLSX.Name = "btnExportToXLSX"
@@ -69,7 +69,7 @@
             ' 
             ' btnExportToXLS
             ' 
-            Me.btnExportToXLS.Image = (DirectCast(resources.GetObject("btnExportToXLS.Image"), System.Drawing.Image))
+            Me.btnExportToXLS.Image = (CType(resources.GetObject("btnExportToXLS.Image"), System.Drawing.Image))
             Me.btnExportToXLS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
             Me.btnExportToXLS.Location = New System.Drawing.Point(126, 80)
             Me.btnExportToXLS.Name = "btnExportToXLS"
@@ -81,7 +81,7 @@
             ' 
             ' btnExportToCSV
             ' 
-            Me.btnExportToCSV.Image = (DirectCast(resources.GetObject("btnExportToCSV.Image"), System.Drawing.Image))
+            Me.btnExportToCSV.Image = (CType(resources.GetObject("btnExportToCSV.Image"), System.Drawing.Image))
             Me.btnExportToCSV.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
             Me.btnExportToCSV.Location = New System.Drawing.Point(241, 80)
             Me.btnExportToCSV.Name = "btnExportToCSV"
