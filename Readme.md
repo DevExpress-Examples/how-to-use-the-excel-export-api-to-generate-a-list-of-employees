@@ -1,3 +1,9 @@
+<!-- default file list -->
+*Files to look at*:
+
+* [EmployeeData.cs](./CS/XLExportExample/EmployeeData.cs) (VB: [EmployeeData.vb](./VB/XLExportExample/EmployeeData.vb))
+* [Form1.cs](./CS/XLExportExample/Form1.cs) (VB: [Form1.vb](./VB/XLExportExample/Form1.vb))
+<!-- default file list end -->
 # How to use the Excel Export API to generate a list of employees
 
 
