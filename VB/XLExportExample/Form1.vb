@@ -1,4 +1,4 @@
-﻿Imports DevExpress.Export.Xl
+Imports DevExpress.Export.Xl
 Imports DevExpress.Spreadsheet
 Imports System
 Imports System.Collections.Generic
@@ -9,13 +9,18 @@ Imports System.IO
 Imports System.Windows.Forms
 
 Namespace XLExportExample
-    Partial Public Class Form1
+
+    Public Partial Class Form1
         Inherits Form
 
-        Private employees As List(Of EmployeeData) = EmployeesRepository.CreateEmployees()
-        Private departments As List(Of String) = EmployeesRepository.CreateDepartments()
+        Private employees As List(Of EmployeeData) = CreateEmployees()
+
+        Private departments As List(Of String) = CreateDepartments()
+
         Private headerRowFormatting As XlCellFormatting
+
         Private evenRowFormatting As XlCellFormatting
+
         Private oddRowFormatting As XlCellFormatting
 
         Public Sub New()
@@ -30,12 +35,10 @@ Namespace XLExportExample
             evenRowFormatting.Font.Name = "Century Gothic"
             evenRowFormatting.Font.SchemeStyle = XlFontSchemeStyles.None
             evenRowFormatting.Alignment = XlCellAlignment.FromHV(XlHorizontalAlignment.Left, XlVerticalAlignment.Center)
-
             ' Specify formatting settings for the odd rows.
             oddRowFormatting = New XlCellFormatting()
             oddRowFormatting.CopyFrom(evenRowFormatting)
             oddRowFormatting.Fill = XlFill.SolidFill(XlColor.FromTheme(XlThemeColor.Light1, -0.15))
-
             ' Specify formatting settings for the header row.
             headerRowFormatting = New XlCellFormatting()
             headerRowFormatting.CopyFrom(evenRowFormatting)
@@ -50,60 +53,42 @@ Namespace XLExportExample
         End Sub
 
         ' Export the document to XLSX format.
-        Private Sub btnExportToXLSX_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnExportToXLSX.Click
+        Private Sub btnExportToXLSX_Click(ByVal sender As Object, ByVal e As EventArgs)
             Dim fileName As String = GetSaveFileName("Excel Workbook files(*.xlsx)|*.xlsx", "Document.xlsx")
-            If String.IsNullOrEmpty(fileName) Then
-                Return
-            End If
-            If ExportToFile(fileName, XlDocumentFormat.Xlsx) Then
-                ShowFile(fileName)
-            End If
+            If String.IsNullOrEmpty(fileName) Then Return
+            If ExportToFile(fileName, XlDocumentFormat.Xlsx) Then ShowFile(fileName)
         End Sub
 
         ' Export the document to XLS format.
-        Private Sub btnExportToXLS_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnExportToXLS.Click
+        Private Sub btnExportToXLS_Click(ByVal sender As Object, ByVal e As EventArgs)
             Dim fileName As String = GetSaveFileName("Excel 97-2003 Workbook files(*.xls)|*.xls", "Document.xls")
-            If String.IsNullOrEmpty(fileName) Then
-                Return
-            End If
-            If ExportToFile(fileName, XlDocumentFormat.Xls) Then
-                ShowFile(fileName)
-            End If
+            If String.IsNullOrEmpty(fileName) Then Return
+            If ExportToFile(fileName, XlDocumentFormat.Xls) Then ShowFile(fileName)
         End Sub
 
         ' Export the document to CSV format.
-        Private Sub btnExportToCSV_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnExportToCSV.Click
+        Private Sub btnExportToCSV_Click(ByVal sender As Object, ByVal e As EventArgs)
             Dim fileName As String = GetSaveFileName("CSV (Comma delimited files)(*.csv)|*.csv", "Document.csv")
-            If String.IsNullOrEmpty(fileName) Then
-                Return
-            End If
-            If ExportToFile(fileName, XlDocumentFormat.Csv) Then
-                ShowFile(fileName)
-            End If
+            If String.IsNullOrEmpty(fileName) Then Return
+            If ExportToFile(fileName, XlDocumentFormat.Csv) Then ShowFile(fileName)
         End Sub
 
         Private Function GetSaveFileName(ByVal filter As String, ByVal defaultName As String) As String
             saveFileDialog1.Filter = filter
             saveFileDialog1.FileName = defaultName
-            If saveFileDialog1.ShowDialog() <> System.Windows.Forms.DialogResult.OK Then
-                Return Nothing
-            End If
+            If saveFileDialog1.ShowDialog() <> DialogResult.OK Then Return Nothing
             Return saveFileDialog1.FileName
         End Function
 
         Private Sub ShowFile(ByVal fileName As String)
-            If Not File.Exists(fileName) Then
-                Return
-            End If
-            Dim dResult As DialogResult = MessageBox.Show(String.Format("Do you want to open the resulting file?", fileName), Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-            If dResult = System.Windows.Forms.DialogResult.Yes Then
-                Process.Start(fileName)
-            End If
+            If Not File.Exists(fileName) Then Return
+            Dim dResult As DialogResult = MessageBox.Show(String.Format("Do you want to open the resulting file?", fileName), Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            If dResult = DialogResult.Yes Then Call Process.Start(fileName)
         End Sub
 
         Private Function ExportToFile(ByVal fileName As String, ByVal documentFormat As XlDocumentFormat) As Boolean
             Try
-                Using stream As New FileStream(fileName, FileMode.Create)
+                Using stream As FileStream = New FileStream(fileName, FileMode.Create)
                     ' Create an exporter with the specified formula parser.
                     Dim exporter As IXlExporter = XlExport.CreateExporter(documentFormat, New XlFormulaParser())
                     ' Create a new document and begin to write it to the specified stream. 
@@ -112,9 +97,10 @@ Namespace XLExportExample
                         GenerateDocument(document)
                     End Using
                 End Using
+
                 Return True
             Catch ex As Exception
-                MessageBox.Show(ex.Message, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Return False
             End Try
         End Function
@@ -122,40 +108,28 @@ Namespace XLExportExample
         Private Sub GenerateDocument(ByVal document As IXlDocument)
             ' Specify the document culture.
             document.Options.Culture = CultureInfo.CurrentCulture
-
             ' Add a new worksheet to the document.
             Using sheet As IXlSheet = document.CreateSheet()
                 ' Specify the worksheet name.
                 sheet.Name = "Employees"
-
                 ' Specify print settings for the worksheet.
                 SetupPageParameters(sheet)
-
                 ' Generate worksheet columns.
                 GenerateColumns(sheet)
-
                 ' Add the title to the documents exported to the XLSX and XLS formats.  
-                If document.Options.DocumentFormat <> XlDocumentFormat.Csv Then
-                    GenerateTitle(sheet)
-                End If
-
+                If document.Options.DocumentFormat <> XlDocumentFormat.Csv Then GenerateTitle(sheet)
                 ' Create the header row.
                 GenerateHeaderRow(sheet)
-
                 Dim firstDataRowIndex As Integer = sheet.CurrentRowIndex
-
                 ' Create the data rows.
                 For i As Integer = 0 To employees.Count - 1
-                    GenerateDataRow(sheet, employees(i), (i + 1) = employees.Count)
-                Next i
+                    GenerateDataRow(sheet, employees(i), i + 1 = employees.Count)
+                Next
 
                 ' Specify the data range to be printed.
                 sheet.PrintArea = sheet.DataRange
-
                 ' Create data validation criteria for the documents exported to the XLSX and XLS formats.
-                If document.Options.DocumentFormat <> XlDocumentFormat.Csv Then
-                    GenerateDataValidations(sheet, firstDataRowIndex)
-                End If
+                If document.Options.DocumentFormat <> XlDocumentFormat.Csv Then GenerateDataValidations(sheet, firstDataRowIndex)
             End Using
 
             ' Create the hidden worksheet containing source data for the data validation drop-down list.
@@ -163,17 +137,15 @@ Namespace XLExportExample
                 Using sheet As IXlSheet = document.CreateSheet()
                     sheet.Name = "Departments"
                     sheet.VisibleState = XlSheetVisibleState.Hidden
-
                     For Each department As String In departments
                         Using row As IXlRow = sheet.CreateRow()
                             Using cell As IXlCell = row.CreateCell()
                                 cell.Value = department
                             End Using
                         End Using
-                    Next department
+                    Next
                 End Using
             End If
-
         End Sub
 
         Private Sub GenerateColumns(ByVal sheet As IXlSheet)
@@ -188,14 +160,13 @@ Namespace XLExportExample
             End Using
 
             Dim numberFormat As XlNumberFormat = "_([$$-409]* #,##0.00_);_([$$-409]* \(#,##0.00\);_([$$-409]* ""-""??_);_(@_)"
-
             ' Create the "Salary" and "Bonus" columns and set the specific number format for their cells.
-            For i As Integer = 0 To 1
+            For i As Integer = 0 To 2 - 1
                 Using column As IXlColumn = sheet.CreateColumn()
                     column.WidthInPixels = 100
                     column.ApplyFormatting(numberFormat)
                 End Using
-            Next i
+            Next
 
             ' Create the "Department" column and set its width.
             Using column As IXlColumn = sheet.CreateColumn()
@@ -205,7 +176,7 @@ Namespace XLExportExample
 
         Private Sub GenerateTitle(ByVal sheet As IXlSheet)
             ' Specify formatting settings for the document title.
-            Dim formatting As New XlCellFormatting()
+            Dim formatting As XlCellFormatting = New XlCellFormatting()
             formatting.Font = New XlFont()
             formatting.Font.Name = "Calibri Light"
             formatting.Font.SchemeStyle = XlFontSchemeStyles.None
@@ -214,13 +185,13 @@ Namespace XLExportExample
             formatting.Border = New XlBorder()
             formatting.Border.BottomColor = XlColor.FromTheme(XlThemeColor.Dark1, 0.35)
             formatting.Border.BottomLineStyle = XlBorderLineStyle.Medium
-
             ' Add the document title.
             Using row As IXlRow = sheet.CreateRow()
                 Using cell As IXlCell = row.CreateCell()
                     cell.Value = "LIST OF EMPLOYEES"
                     cell.Formatting = formatting
                 End Using
+
                 ' Create four empty cells with the title formatting.
                 row.BlankCells(4, formatting)
             End Using
@@ -230,18 +201,17 @@ Namespace XLExportExample
         End Sub
 
         Private Sub GenerateHeaderRow(ByVal sheet As IXlSheet)
-            Dim columnNames() As String = { "Employee ID", "Employee Name", "Salary", "Bonus", "Department" }
+            Dim columnNames As String() = New String() {"Employee ID", "Employee Name", "Salary", "Bonus", "Department"}
             ' Create the header row and set its height.
             Using row As IXlRow = sheet.CreateRow()
                 row.HeightInPixels = 28
-
                 ' Create required cells in the header row and apply specific formatting settings to them. 
                 For Each columnName As String In columnNames
                     Using cell As IXlCell = row.CreateCell()
                         cell.Value = columnName
                         cell.ApplyFormatting(headerRowFormatting)
                     End Using
-                Next columnName
+                Next
             End Using
         End Sub
 
@@ -249,9 +219,8 @@ Namespace XLExportExample
             ' Create the data row to display the employee's information.
             Using row As IXlRow = sheet.CreateRow()
                 row.HeightInPixels = 28
-
                 ' Specify formatting settings to be applied to the data rows to shade alternate rows. 
-                Dim formatting As New XlCellFormatting()
+                Dim formatting As XlCellFormatting = New XlCellFormatting()
                 formatting.CopyFrom(If(row.RowIndex Mod 2 = 0, evenRowFormatting, oddRowFormatting))
                 ' Set the bottom border for the last data row.
                 If isLastRow Then
@@ -296,7 +265,6 @@ Namespace XLExportExample
             ' Specify the header and footer for the odd-numbered pages.
             sheet.HeaderFooter.OddHeader = XlHeaderFooter.FromLCR("NorthWind Inc.", Nothing, XlHeaderFooter.Date)
             sheet.HeaderFooter.OddFooter = XlHeaderFooter.FromLCR("List of employees", Nothing, XlHeaderFooter.PageNumber & " of " & XlHeaderFooter.PageTotal)
-
             ' Specify page margins.
             sheet.PageMargins = New XlPageMargins()
             sheet.PageMargins.PageUnits = XlPageUnits.Centimeters
@@ -306,7 +274,6 @@ Namespace XLExportExample
             sheet.PageMargins.Bottom = 1.4
             sheet.PageMargins.Header = 0.7
             sheet.PageMargins.Footer = 0.7
-
             ' Specify page settings.
             sheet.PageSetup = New XlPageSetup()
             ' Select the paper size.
@@ -319,14 +286,13 @@ Namespace XLExportExample
 
         Private Sub GenerateDataValidations(ByVal sheet As IXlSheet, ByVal firstDataRowIndex As Integer)
             ' Restrict data entry in the "Employee ID" column using criteria calculated by a worksheet formula (Employee ID must be a 5-digit number).
-            Dim validation As New XlDataValidation()
+            Dim validation As XlDataValidation = New XlDataValidation()
             validation.Ranges.Add(XlCellRange.FromLTRB(0, firstDataRowIndex, 0, sheet.CurrentRowIndex - 1))
             validation.Type = XlDataValidationType.Custom
             validation.Criteria1 = String.Format("=AND(ISNUMBER(A{0}),LEN(A{0})=5)", firstDataRowIndex + 1)
             validation.InputPrompt = "Please enter a 5-digit number."
             validation.PromptTitle = "Employee ID"
             sheet.DataValidations.Add(validation)
-
             ' Restrict data entry in the "Salary" column to a whole number from 600 to 2000.
             validation = New XlDataValidation()
             validation.Ranges.Add(XlCellRange.FromLTRB(2, firstDataRowIndex, 2, sheet.CurrentRowIndex - 1))
@@ -344,7 +310,6 @@ Namespace XLExportExample
             validation.ShowErrorMessage = True
             validation.ShowInputMessage = True
             sheet.DataValidations.Add(validation)
-
             ' Restrict data entry in the "Bonus" column to a decimal number within the specified limits (bonus cannot be greater than 10% of the salary.)
             validation = New XlDataValidation()
             validation.Ranges.Add(XlCellRange.FromLTRB(3, firstDataRowIndex, 3, sheet.CurrentRowIndex - 1))
@@ -358,7 +323,6 @@ Namespace XLExportExample
             validation.ErrorStyle = XlDataValidationErrorStyle.Information
             validation.ShowErrorMessage = True
             sheet.DataValidations.Add(validation)
-
             ' Restrict data entry in the "Department" column to values in a drop-down list obtained from the cell range in the hidden "Departments" worksheet.
             validation = New XlDataValidation()
             validation.Ranges.Add(XlCellRange.FromLTRB(4, firstDataRowIndex, 4, sheet.CurrentRowIndex - 1))

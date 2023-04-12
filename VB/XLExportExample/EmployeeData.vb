@@ -1,8 +1,11 @@
-﻿Imports System.Collections.Generic
+Imports System.Collections.Generic
 Imports System.Linq
 
 Namespace XLExportExample
+
     Friend Class EmployeeData
+
+        Private _Id As Integer, _Name As String, _Salary As Double, _Bonus As Double, _Department As String
 
         Public Sub New(ByVal id As Integer, ByVal name As String, ByVal salary As Double, ByVal bonus As Double, ByVal department As String)
             Me.Id = id
@@ -12,61 +15,63 @@ Namespace XLExportExample
             Me.Department = department
         End Sub
 
-        Private privateId As Integer
-        Public Property Id() As Integer
+        Public Property Id As Integer
             Get
-                Return privateId
+                Return _Id
             End Get
+
             Private Set(ByVal value As Integer)
-                privateId = value
+                _Id = value
             End Set
         End Property
-        Private privateName As String
-        Public Property Name() As String
+
+        Public Property Name As String
             Get
-                Return privateName
+                Return _Name
             End Get
+
             Private Set(ByVal value As String)
-                privateName = value
+                _Name = value
             End Set
         End Property
-        Private privateSalary As Double
-        Public Property Salary() As Double
+
+        Public Property Salary As Double
             Get
-                Return privateSalary
+                Return _Salary
             End Get
+
             Private Set(ByVal value As Double)
-                privateSalary = value
+                _Salary = value
             End Set
         End Property
-        Private privateBonus As Double
-        Public Property Bonus() As Double
+
+        Public Property Bonus As Double
             Get
-                Return privateBonus
+                Return _Bonus
             End Get
+
             Private Set(ByVal value As Double)
-                privateBonus = value
+                _Bonus = value
             End Set
         End Property
-        Private privateDepartment As String
-        Public Property Department() As String
+
+        Public Property Department As String
             Get
-                Return privateDepartment
+                Return _Department
             End Get
+
             Private Set(ByVal value As String)
-                privateDepartment = value
+                _Department = value
             End Set
         End Property
     End Class
 
-    Friend NotInheritable Class EmployeesRepository
+    Friend Module EmployeesRepository
 
-        Private Sub New()
-        End Sub
-        Private Shared departments() As String = { "Accounting", "Logistics", "IT", "Management", "Manufacturing", "Marketing" }
+        Private departments As String() = New String() {"Accounting", "Logistics", "IT", "Management", "Manufacturing", "Marketing"}
 
-        Public Shared Function CreateEmployees() As List(Of EmployeeData)
-            Dim result As New List(Of EmployeeData)()
+        Public Function CreateEmployees() As List(Of EmployeeData)
+            Dim result As List(Of EmployeeData) = New List(Of EmployeeData)()
             result.Add(New EmployeeData(10115, "Augusta Delono", 1100.0, 50.0, "Accounting"))
             result.Add(New EmployeeData(10501, "Berry Dafoe", 1650.0, 150.0, "IT"))
             result.Add(New EmployeeData(10709, "Chris Cadwell", 2000.0, 180.0, "Management"))
@@ -78,8 +83,8 @@ Namespace XLExportExample
             Return result
         End Function
 
-        Public Shared Function CreateDepartments() As List(Of String)
+        Public Function CreateDepartments() As List(Of String)
             Return departments.ToList()
         End Function
-    End Class
+    End Module
 End Namespace
