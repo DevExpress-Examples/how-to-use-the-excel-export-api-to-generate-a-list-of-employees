@@ -9,7 +9,8 @@ using System.IO;
 using System.Windows.Forms;
 
 namespace XLExportExample {
-    public partial class Form1 : Form {
+    public partial class Form1 : DevExpress.XtraEditors.XtraForm
+    {
         List<EmployeeData> employees = EmployeesRepository.CreateEmployees();
         List<string> departments = EmployeesRepository.CreateDepartments();
         XlCellFormatting headerRowFormatting;

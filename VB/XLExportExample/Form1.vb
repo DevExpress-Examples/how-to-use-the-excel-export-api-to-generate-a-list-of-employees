@@ -11,7 +11,7 @@ Imports System.Windows.Forms
 Namespace XLExportExample
 
     Public Partial Class Form1
-        Inherits Form
+        Inherits DevExpress.XtraEditors.XtraForm
 
         Private employees As List(Of EmployeeData) = CreateEmployees()
 
@@ -53,21 +53,21 @@ Namespace XLExportExample
         End Sub
 
         ' Export the document to XLSX format.
-        Private Sub btnExportToXLSX_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Private Sub btnExportToXLSX_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnExportToXLSX.Click
             Dim fileName As String = GetSaveFileName("Excel Workbook files(*.xlsx)|*.xlsx", "Document.xlsx")
             If String.IsNullOrEmpty(fileName) Then Return
             If ExportToFile(fileName, XlDocumentFormat.Xlsx) Then ShowFile(fileName)
         End Sub
 
         ' Export the document to XLS format.
-        Private Sub btnExportToXLS_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Private Sub btnExportToXLS_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnExportToXLS.Click
             Dim fileName As String = GetSaveFileName("Excel 97-2003 Workbook files(*.xls)|*.xls", "Document.xls")
             If String.IsNullOrEmpty(fileName) Then Return
             If ExportToFile(fileName, XlDocumentFormat.Xls) Then ShowFile(fileName)
         End Sub
 
         ' Export the document to CSV format.
-        Private Sub btnExportToCSV_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Private Sub btnExportToCSV_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnExportToCSV.Click
             Dim fileName As String = GetSaveFileName("CSV (Comma delimited files)(*.csv)|*.csv", "Document.csv")
             If String.IsNullOrEmpty(fileName) Then Return
             If ExportToFile(fileName, XlDocumentFormat.Csv) Then ShowFile(fileName)
