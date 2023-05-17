@@ -295,7 +295,7 @@ namespace XLExportExample {
             // Specify page settings.
             sheet.PageSetup = new XlPageSetup();
             // Select the paper size.
-            sheet.PageSetup.PaperKind = PaperKind.A4;
+            sheet.PageSetup.PaperKind = DevExpress.Drawing.Printing.DXPaperKind.A4;
             // Scale the print area to fit to one page wide.
             sheet.PageSetup.FitToPage = true;
             sheet.PageSetup.FitToWidth = 1;
