@@ -9,6 +9,9 @@
 
 This example demonstrates how to use the [Excel Export API](https://docs.devexpress.com/OfficeFileAPI/114031/Excel-Export-Library/) to generate the "List of Employees" document shown in the image below.
 
+> [!Important]  
+> The Universal Subscription or an additional Office File API Subscription is required to use this example in production code. For pricing information, please refer to the [DevExpress Subscription](https://www.devexpress.com/Subscriptions/) page. 
+
 <img src="https://raw.githubusercontent.com/DevExpress-Examples/how-to-use-the-xl-export-api-to-generate-a-list-of-employees-t251723/15.1.3+/media/ccc75465-0b77-11e5-80bf-00155d62480c.png">
 
 
